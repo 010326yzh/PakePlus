@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七年级下册文言文 · 小组PK赛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "KaiTi", sans-serif;
+        }
+
+        body {
+            background: url('https://pic.16pic.com/sucai/2020/v992992.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+            border: 2px solid #c8a97e;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            color: #8b4513;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px #ddd;
+        }
+
+        .tip {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .pk-box {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .team {
+            flex: 1;
+            border: 3px solid #d2b48c;
+            border-radius: 14px;
+            padding: 20px;
+            background: rgba(250, 245, 238, 0.9);
+            position: relative;
+        }
+
+        .team-a {
+            border-color: #1e88e5;
+        }
+
+        .team-b {
+            border-color: #d32f2f;
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .team-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .team-a .team-name {
+            color: #1565c0;
+        }
+
+        .team-b .team-name {
+            color: #c62828;
+        }
+
+        .score {
+            font-size: 22px;
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .time {
+            background: #fff3e0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #e65100;
+            font-size: 16px;
+        }
+
+        .question {
+            min-height: 140px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            line-height: 1.7;
+        }
+
+        .options {
+            margin: 10px 0;
+        }
+
+        .opt {
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 8px 0;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            transition: 0.2s;
+        }
+
+        .opt:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .blank-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            background: #6f4c3e;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .analysis {
+            background: #fff8e1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            color: #8b4513;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .finish {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 248, 225, 0.95);
+            border-radius: 12px;
+            margin-top: 25px;
+            border: 2px solid #d7ccc8;
+            display: none;
+        }
+
+        .finish h2 {
+            color: #b71c1c;
+            margin-bottom: 15px;
+        }
+
+        .finish p {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <audio loop id="bgm" autoplay>
+        <source src="https://music.1146.com/mp3/2025/05/01/1146.com_guofeng.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <h1 class="title">🏮 七年级下册文言文 · 小组PK赛 🏮</h1>
+        <p class="tip">涵盖：孙权劝学｜木兰诗｜卖油翁｜陋室铭｜爱莲说｜活板</p>
+
+        <div class="pk-box">
+            <!-- 甲组 -->
+            <div class="team team-a" id="teamA">
+                <div class="team-header">
+                    <div class="team-name">甲组</div>
+                    <div class="score">得分：<span id="scoreA">0</span></div>
+                    <div class="time" id="timeA">10s</div>
+                </div>
+                <div class="question" id="qA"></div>
+                <button class="btn" onclick="next('A')">下一题</button>
+                <div class="result" id="resA"></div>
+                <div class="analysis" id="anaA"></div>
+            </div>
+
+            <!-- 乙组 -->
+            <div class="team team-b" id="teamB">
+                <div class="team-header">
+                    <div class="team-name">乙组</div>
+                    <div class="score">得分：<span id="scoreB">0</span></div>
+                    <div class="time" id="timeB">10s</div>
+                </div>
+                <div class="question" id="qB"></div>
+                <button class="btn" onclick="next('B')">下一题</button>
+                <div class="result" id="resB"></div>
+                <div class="analysis" id="anaB"></div>
+            </div>
+        </div>
+
+        <div class="finish" id="finish"></div>
+    </div>
+
+    <script>
+        // 全套题库
+        const questions = [
+            { type: "choose", q: "《孙权劝学》中‘但当涉猎’的‘但’意思是？", a: ["但是", "只，只是", "而且", "竟然"], ans: "只，只是", ana: "但：古今异义，古义为只、只是" },
+            { type: "judge", q: "《木兰诗》‘愿为市鞍马’中‘市’是‘买’的意思", a: ["正确", "错误"], ans: "正确", ana: "市：名词作动词，买" },
+            { type: "blank", q: "《卖油翁》‘以我酌油知之’的‘酌’意思是____", ans: "倒", ana: "酌：倒（油）" },
+            { type: "choose", q: "《陋室铭》‘斯是陋室’的‘斯’意思是？", a: ["这", "那", "此", "是"], ans: "这", ana: "斯：这" },
+            { type: "judge", q: "《爱莲说》‘出淤泥而不染’的‘而’表转折", a: ["正确", "错误"], ans: "正确", ana: "而：表转折，却" },
+            { type: "blank", q: "《活板》‘瞬息可就’的‘就’意思是____", ans: "完成", ana: "就：完成" },
+            { type: "choose", q: "《孙权劝学》‘及鲁肃过寻阳’的‘及’是？", a: ["以及", "和", "等到", "及时"], ans: "等到", ana: "及：等到" },
+            { type: "judge", q: "《木兰诗》‘策勋十二转’的‘策勋’是记功", a: ["正确", "错误"], ans: "正确", ana: "策勋：记功" },
+            { type: "blank", q: "《爱莲说》‘亭亭净植’的‘植’意思是____", ans: "立", ana: "植：竖立" },
+            { type: "choose", q: "《活板》‘再火令药熔’的‘火’是？", a: ["火焰", "用火烤", "着火", "点火"], ans: "用火烤", ana: "火：名词作动词，用火烤" },
+            { type: "judge", q: "《陋室铭》‘无案牍之劳形’的‘之’是助词，无实义", a: ["正确", "错误"], ans: "正确", ana: "之：取消句子独立性" },
+            { type: "blank", q: "《卖油翁》‘但微颔之’的‘颔’意思是____", ans: "点头", ana: "颔：点头" },
+            { type: "choose", q: "《活板》‘板印书籍’的‘板’通？", a: ["版", "办", "半", "斑"], ans: "版", ana: "板通版，雕版" },
+            { type: "judge", q: "《孙权劝学》‘见往事耳’的‘往事’是历史", a: ["正确", "错误"], ans: "正确", ana: "往事：古义指历史" },
+            { type: "blank", q: "《木兰诗》‘万里赴戎机’的‘戎机’指____", ans: "战争", ana: "戎机：战争、战场" }
+        ];
+
+        // 游戏状态
+        const game = {
+            qA: shuffle([...questions]).slice(0, 10),
+            qB: shuffle([...questions]).slice(0, 10),
+            idxA: 0, idxB: 0,
+            scoreA: 0, scoreB: 0,
+            timerA: null, timerB: null
+        };
+
+        // 打乱题库
+        function shuffle(arr) {
+            return arr.sort(() => Math.random() - 0.5);
+        }
+
+        // 渲染题目
+        function render(team) {
+            const idx = game[`idx${team}`];
+            const list = game[`q${team}`];
+            if (idx >= 10) { endTeam(team); return; }
+
+            const q = list[idx];
+            const box = document.getElementById(`q${team}`);
+            const res = document.getElementById(`res${team}`);
+            const ana = document.getElementById(`ana${team}`);
+            res.innerText = ''; ana.style.display = 'none';
+
+            let html = `<div style="font-size:16px;">第${idx+1}题：${q.q}</div>`;
+
+            if (q.type === "choose" || q.type === "judge") {
+                html += '<div class="options">';
+                q.a.forEach((item, i) => {
+                    html += `<div class="opt" onclick="ans('${team}',${i})">${item}</div>`;
+                });
+                html += '</div>';
+            } else {
+                html += `<input class="blank-input" id="blank${team}" placeholder="请输入答案">`;
+                html += `<button class="btn" onclick="subBlank('${team}')">提交</button>`;
+            }
+
+            box.innerHTML = html;
+            startTimer(team);
+        }
+
+        // 10秒倒计时
+        function startTimer(team) {
+            let sec = 10;
+            clearInterval(game[`timer${team}`]);
+            const timeDom = document.getElementById(`time${team}`);
+            timeDom.innerText = sec + "s";
+
+            game[`timer${team}`] = setInterval(() => {
+                sec--;
+                timeDom.innerText = sec + "s";
+                if (sec <= 0) {
+                    clearInterval(game[`timer${team}`]);
+                    timeOut(team);
+                }
+            }, 1000);
+        }
+
+        // 时间到
+        function timeOut(team) {
+            const res = document.getElementById(`res${team}`);
+            const ana = document.getElementById(`ana${team}`);
+            const q = game[`q${team}`][game[`idx${team}`]];
+            res.innerText = "⏰ 时间到！本题不得分";
+            res.style.color = "#d32f2f";
+            ana.innerText = q.ana;
+            ana.style.display = "block";
+        }
+
+        // 答题（选择/判断）
+        function ans(team, i) {
+            clearInterval(game[`timer${team}`]);
+            const idx = game[`idx${team}`];
+            const q = game[`q${team}`][idx];
+            const user = q.a[i];
+            const res = document.getElementById(`res${team}`);
+            const ana = document.getElementById(`ana${team}`);
+            const opts = document.querySelectorAll(`#q${team} .opt`);
+            opts.forEach(o => o.style.pointerEvents = "none");
+
+            if (user === q.ans) {
+                game[`score${team}`] += 10;
+                res.innerText = "✅ 正确 +10分";
+                res.style.color = "#2e7d32";
+            } else {
+                res.innerText = `❌ 错误，答案：${q.ans}`;
+                res.style.color = "#c62828";
+            }
+
+            document.getElementById(`score${team}`).innerText = game[`score${team}`];
+            ana.innerText = q.ana;
+            ana.style.display = "block";
+        }
+
+        // 填空提交
+        function subBlank(team) {
+            clearInterval(game[`timer${team}`]);
+            const idx = game[`idx${team}`];
+            const q = game[`q${team}`][idx];
+            const val = document.getElementById(`blank${team}`).value.trim();
+            const res = document.getElementById(`res${team}`);
+            const ana = document.getElementById(`ana${team}`);
+
+            if (val === q.ans) {
+                game[`score${team}`] += 10;
+                res.innerText = "✅ 正确 +10分";
+                res.style.color = "#2e7d32";
+            } else {
+                res.innerText = `❌ 错误，答案：${q.ans}`;
+                res.style.color = "#c62828";
+            }
+
+            document.getElementById(`score${team}`).innerText = game[`score${team}`];
+            ana.innerText = q.ana;
+            ana.style.display = "block";
+        }
+
+        // 下一题
+        function next(team) {
+            game[`idx${team}`]++;
+            render(team);
+        }
+
+        // 单组结束
+        function endTeam(team) {
+            document.getElementById(`q${team}`).innerHTML = "<div style='color:#b71c1c;font-weight:bold;font-size:17px;'>✅ 答题完成！</div>";
+            checkEnd();
+        }
+
+        // 全部结束
+        function checkEnd() {
+            if (game.idxA >= 10 && game.idxB >= 10) {
+                const f = document.getElementById("finish");
+                f.style.display = "block";
+                let html = `<h2>🎊 比赛结束 🎊</h2>`;
+                html += `<p>甲组得分：${game.scoreA} 分</p>`;
+                html += `<p>乙组得分：${game.scoreB} 分</p>`;
+
+                if (game.scoreA > game.scoreB) {
+                    html += `<h2 style='color:#1565c0'>🏆 甲组获胜！</h2>`;
+                } else if (game.scoreB > game.scoreA) {
+                    html += `<h2 style='color:#c62828'>🏆 乙组获胜！</h2>`;
+                } else {
+                    html += `<h2 style='color:#ff8f00'>⚖️ 双方平局！</h2>`;
+                }
+
+                f.innerHTML = html;
+            }
+        }
+
+        // 开始游戏
+        render('A');
+        render('B');
+    </script>
+</body>
+</html>
