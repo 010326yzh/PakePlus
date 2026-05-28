@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文典</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        chinese: {
+                            red: '#8B0000',
+                            gold: '#D4AF37',
+                            black: '#1A1A1A',
+                            paper: '#F5F0E6',
+                            ink: '#2C2C2C'
+                        }
+                    },
+                    fontFamily: {
+                        chinese: ['"Ma Shan Zheng"', '"ZCOOL XiaoWei"', 'serif']
+                    },
+                    backgroundImage: {
+                        'ink-wash': "url('https://picsum.photos/id/104/1600/900')",
+                        'cloud-pattern': "url('https://picsum.photos/id/175/100/100')"
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow-chinese {
+                text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.3);
+            }
+            .border-chinese {
+                border: 2px solid #8B0000;
+            }
+            .bg-paper {
+                background-color: #F5F0E6;
+            }
+            .bg-ink {
+                background-color: #2C2C2C;
+            }
+            .scrollbar-chinese::-webkit-scrollbar {
+                width: 8px;
+            }
+            .scrollbar-chinese::-webkit-scrollbar-thumb {
+                background: #8B0000;
+                border-radius: 4px;
+            }
+        }
+    </style>
+    <!-- 引入中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+</head>
+<body class="bg-chinese-paper font-chinese text-chinese-ink min-h-screen flex flex-col">
+    <!-- 顶部国风标题栏 -->
+    <header class="bg-ink-wash bg-cover bg-center py-6 border-b-4 border-chinese-red shadow-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-[clamp(1.8rem,4vw,3rem)] text-chinese-gold text-center font-bold text-shadow-chinese tracking-wider">
+                七年级下册语文复习宝典
+            </h1>
+            <p class="text-chinese-paper text-center mt-2 text-lg">
+            </p>
+        </div>
+    </header>
+
+    <!-- 功能切换区 -->
+    <nav class="bg-chinese-red py-4 shadow-md">
+        <div class="container mx-auto px-4 flex justify-center gap-8">
+            <button id="selfStudyBtn" class="px-8 py-2 bg-chinese-gold text-chinese-black rounded-lg text-xl font-bold transition-all hover:scale-105">
+                <i class="fa fa-book mr-2"></i>自主学习
+            </button>
+            <button id="classPKBtn" class="px-8 py-2 bg-chinese-paper text-chinese-red rounded-lg text-xl font-bold transition-all hover:scale-105">
+                <i class="fa fa-users mr-2"></i>课堂PK
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- 自主学习模块 -->
+        <section id="selfStudyModule" class="block">
+            <!-- 模块选择 -->
+            <div class="bg-paper border-chinese rounded-lg p-6 shadow-lg mb-8">
+                <h2 class="text-2xl text-chinese-red font-bold mb-4 border-b-2 border-chinese-gold pb-2">
+                    选择学习模块
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <button class="module-btn px-4 py-3 bg-chinese-red text-white rounded-lg hover:bg-chinese-gold transition-colors" data-module="words">词语</button>
+                    <button class="module-btn px-4 py-3 bg-chinese-red text-white rounded-lg hover:bg-chinese-gold transition-colors" data-module="poems">诗句默写</button>
+                    <button class="module-btn px-4 py-3 bg-chinese-red text-white rounded-lg hover:bg-chinese-gold transition-colors" data-module="literature">文学常识</button>
+                    <button class="module-btn px-4 py-3 bg-chinese-red text-white rounded-lg hover:bg-chinese-gold transition-colors" data-module="classical">课内文言文</button>
+                    <button class="module-btn px-4 py-3 bg-chinese-red text-white rounded-lg hover:bg-chinese-gold transition-colors" data-module="classics">名著阅读</button>
+                </div>
+            </div>
+
+            <!-- 题目展示区 -->
+            <div class="bg-paper border-chinese rounded-lg p-6 shadow-lg min-h-[400px] scrollbar-chinese">
+                <div id="selfStudyContent" class="text-lg">
+                    <p class="text-center text-gray-600 mt-20">请选择上方模块开始学习</p>
+                </div>
+            </div>
+
+            <!-- 答案解析区 -->
+            <div id="answerSection" class="mt-6 bg-paper border-chinese rounded-lg p-6 shadow-lg hidden">
+                <h3 class="text-xl text-chinese-red font-bold mb-2">答案解析</h3>
+                <div id="answerContent" class="text-lg"></div>
+            </div>
+        </section>
+
+        <!-- 课堂PK模块 -->
+        <section id="classPKModule" class="hidden">
+            <!-- PK设置 -->
+            <div class="bg-paper border-chinese rounded-lg p-6 shadow-lg mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl text-chinese-red font-bold border-b-2 border-chinese-gold pb-2">
+                        甲乙两组PK赛
+                    </h2>
+                    <div class="flex gap-4">
+                        <button id="startPKBtn" class="px-6 py-2 bg-chinese-gold text-chinese-black rounded-lg font-bold hover:bg-yellow-400 transition-colors">
+                            开始比赛
+                        </button>
+                        <button id="resetPKBtn" class="px-6 py-2 bg-chinese-red text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
+                            重置比赛
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- 甲组信息 -->
+                    <div class="text-center">
+                        <h3 class="text-xl text-blue-700 font-bold mb-2">甲组</h3>
+                        <div class="text-3xl font-bold mb-2">得分：<span id="teamAScore">0</span></div>
+                        <div class="text-lg mb-2">剩余题目：<span id="teamARemain">10</span></div>
+                    </div>
+                    <!-- 乙组信息 -->
+                    <div class="text-center">
+                        <h3 class="text-xl text-green-700 font-bold mb-2">乙组</h3>
+                        <div class="text-3xl font-bold mb-2">得分：<span id="teamBScore">0</span></div>
+                        <div class="text-lg mb-2">剩余题目：<span id="teamBRemain">10</span></div>
+                    </div>
+                </div>
+                <!-- 倒计时 -->
+                <div class="text-center mt-4">
+                    <div class="text-2xl font-bold text-chinese-red">
+                        倒计时：<span id="timer">30</span>秒
+                    </div>
+                </div>
+            </div>
+
+            <!-- 答题区 -->
+            <div class="grid grid-cols-2 gap-8">
+                <!-- 甲组答题框 -->
+                <div class="bg-paper border-4 border-blue-700 rounded-lg p-6 shadow-lg min-h-[400px]">
+                    <h3 class="text-xl text-blue-700 font-bold mb-4 border-b-2 border-blue-300 pb-2">
+                        甲组答题区
+                    </h3>
+                    <div id="teamAQuestion" class="text-lg mb-4 min-h-[100px]"></div>
+                    <div id="teamAOptions" class="mb-4"></div>
+                    <input type="text" id="teamAAnswer" class="w-full p-3 border-2 border-blue-700 rounded-lg text-lg mb-4" placeholder="请输入答案（填空/判断填文字，选择填选项）">
+                    <button id="teamASubmit" class="w-full px-6 py-3 bg-blue-700 text-white rounded-lg font-bold hover:bg-blue-800 transition-colors" disabled>
+                        提交答案
+                    </button>
+                </div>
+
+                <!-- 乙组答题框 -->
+                <div class="bg-paper border-4 border-green-700 rounded-lg p-6 shadow-lg min-h-[400px]">
+                    <h3 class="text-xl text-green-700 font-bold mb-4 border-b-2 border-green-300 pb-2">
+                        乙组答题区
+                    </h3>
+                    <div id="teamBQuestion" class="text-lg mb-4 min-h-[100px]"></div>
+                    <div id="teamBOptions" class="mb-4"></div>
+                    <input type="text" id="teamBAnswer" class="w-full p-3 border-2 border-green-700 rounded-lg text-lg mb-4" placeholder="请输入答案（填空/判断填文字，选择填选项）">
+                    <button id="teamBSubmit" class="w-full px-6 py-3 bg-green-700 text-white rounded-lg font-bold hover:bg-green-800 transition-colors" disabled>
+                        提交答案
+                    </button>
+                </div>
+            </div>
+
+            <!-- PK结果解析区 -->
+            <div id="pkResultSection" class="mt-8 bg-paper border-chinese rounded-lg p-6 shadow-lg hidden">
+                <h3 class="text-xl text-chinese-red font-bold mb-2">比赛结果 & 解析</h3>
+                <div id="pkResultContent" class="text-lg"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部国风页脚 -->
+    <footer class="bg-ink py-4 text-chinese-paper text-center mt-8">
+        <p>文典 | 助力学业，传承文脉</p>
+    </footer>
+
+    <script>
+        // 题库数据（整合文档中的真题，覆盖五大模块）
+        const questionBank = {
+            words: [
+                { type: 'fill', question: '（ ）chìzhà', answer: '叱咤', analysis: '叱咤，形容声势威力很大' },
+                { type: 'fill', question: '（ ）ruì智', answer: '睿', analysis: '睿智，英明有远见' },
+                { type: 'judge', question: '“鲜为人知”的“鲜”读xiān（ ）', answer: '错误', analysis: '“鲜为人知”的“鲜”读xiǎn，意思是少' },
+                { type: 'choice', question: '下列词语书写正确的是（ ）', options: ['A.鞠躬尽萃', 'B.锋芒必露', 'C.截然不同', 'D.妇儒皆知'], answer: 'C', analysis: 'A应为鞠躬尽瘁，B应为锋芒毕露，D应为妇孺皆知' }
+            ],
+            poems: [
+                { type: 'fill', question: '万里赴戎机，__________。（《木兰诗》）', answer: '关山度若飞', analysis: '描写木兰奔赴战场的矫健英姿' },
+                { type: 'fill', question: '深林人不知，__________。（王维《竹里馆》）', answer: '明月来相照', analysis: '写出夜静人寂、明月相伴的情景' },
+                { type: 'judge', question: '《望岳》中“会当凌绝顶，一览众山小”表达诗人消极避世的情怀（ ）', answer: '错误', analysis: '表达诗人攀登人生顶峰、不畏困难的抱负' },
+                { type: 'choice', question: '《己亥杂诗》中表达奉献精神的诗句是（ ）', options: ['A.浩荡离愁白日斜', 'B.吟鞭东指即天涯', 'C.落红不是无情物', 'D.化作春泥更护花'], answer: 'D', analysis: '以落花自喻，表达辞官后仍关心国家命运的情怀' }
+            ],
+            literature: [
+                { type: 'fill', question: '《邓稼先》作者是__________，获诺贝尔物理学奖', answer: '杨振宁', analysis: '杨振宁，理论物理学家，与李政道共获1957年诺奖' },
+                { type: 'fill', question: '《木兰诗》选自《__________》', answer: '乐府诗集', analysis: '北宋郭茂倩编写，收录南北朝北方民歌' },
+                { type: 'judge', question: '《陋室铭》作者是北宋刘禹锡（ ）', answer: '错误', analysis: '刘禹锡是唐代文学家，有“诗豪”之称' },
+                { type: 'choice', question: '《钢铁是怎样炼成的》作者是（ ）', options: ['A.老舍', 'B.奥斯特洛夫斯基', 'C.鲁迅', 'D.茨威格'], answer: 'B', analysis: '苏联作家，以亲身经历创作保尔·柯察金成长故事' }
+            ],
+            classical: [
+                { type: 'fill', question: '《孙权劝学》中，蒙曰：“士别三日，__________。”', answer: '即更刮目相待', analysis: '表现吕蒙学识进步，不再是吴下阿蒙' },
+                { type: 'fill', question: '《卖油翁》中，无他，__________。', answer: '但手熟尔', analysis: '点明技艺高超的原因是手法熟练' },
+                { type: 'judge', question: '“但手熟尔”的“尔”是“你”的意思（ ）', answer: '错误', analysis: '“尔”同“耳”，语气词，罢了' },
+                { type: 'choice', question: '《爱莲说》中象征君子不与世俗同流合污的句子是（ ）', options: ['A.中通外直', 'B.不蔓不枝', 'C.出淤泥而不染', 'D.亭亭净植'], answer: 'C', analysis: '突出莲花高洁品质，比喻君子洁身自好' }
+            ],
+            classics: [
+                { type: 'fill', question: '《骆驼祥子》中，祥子最大的梦想是__________', answer: '拥有一辆自己的车', analysis: '祥子来自农村，勤劳坚韧，梦想买自己的车' },
+                { type: 'fill', question: '《钢铁是怎样炼成的》主人公是__________', answer: '保尔·柯察金', analysis: '无产阶级战士，钢铁般意志，为理想奋斗终身' },
+                { type: 'judge', question: '《骆驼祥子》中虎妞最终难产而死（ ）', answer: '正确', analysis: '虎妞用私房钱给祥子买车，后难产去世，祥子卖车葬妻' },
+                { type: 'choice', question: '下列人物中，对祥子影响最大、导致其堕落的是（ ）', options: ['A.曹先生', 'B.小福子', 'C.刘四爷', 'D.老马'], answer: 'B', analysis: '小福子自杀，彻底摧毁祥子最后一点希望，使其堕落' }
+            ]
+        };
+
+        // 全局变量
+        let currentModule = '';
+        let selfStudyIndex = 0;
+        let pkQuestions = { teamA: [], teamB: [] };
+        let pkIndex = { teamA: 0, teamB: 0 };
+        let pkScore = { teamA: 0, teamB: 0 };
+        let timer = null;
+        let timeLeft = 30;
+
+        // 功能切换
+        document.getElementById('selfStudyBtn').addEventListener('click', () => {
+            document.getElementById('selfStudyModule').classList.remove('hidden');
+            document.getElementById('classPKModule').classList.add('hidden');
+            document.getElementById('selfStudyBtn').classList.add('bg-chinese-gold', 'text-chinese-black');
+            document.getElementById('selfStudyBtn').classList.remove('bg-chinese-red', 'text-white');
+            document.getElementById('classPKBtn').classList.add('bg-chinese-red', 'text-white');
+            document.getElementById('classPKBtn').classList.remove('bg-chinese-gold', 'text-chinese-black');
+        });
+
+        document.getElementById('classPKBtn').addEventListener('click', () => {
+            document.getElementById('selfStudyModule').classList.add('hidden');
+            document.getElementById('classPKModule').classList.remove('hidden');
+            document.getElementById('classPKBtn').classList.add('bg-chinese-gold', 'text-chinese-black');
+            document.getElementById('classPKBtn').classList.remove('bg-chinese-red', 'text-white');
+            document.getElementById('selfStudyBtn').classList.add('bg-chinese-red', 'text-white');
+            document.getElementById('selfStudyBtn').classList.remove('bg-chinese-gold', 'text-chinese-black');
+        });
+
+        // 自主学习模块
+        document.querySelectorAll('.module-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentModule = btn.dataset.module;
+                selfStudyIndex = 0;
+                document.getElementById('answerSection').classList.add('hidden');
+                renderSelfStudyQuestion();
+            });
+        });
+
+        function renderSelfStudyQuestion() {
+            const questions = questionBank[currentModule];
+            if (selfStudyIndex >= questions.length) {
+                document.getElementById('selfStudyContent').innerHTML = '<p class="text-center text-xl text-chinese-red">该模块题目已全部完成！</p>';
+                return;
+            }
+            const q = questions[selfStudyIndex];
+            let html = `<div class="mb-4"><p class="font-bold">题目${selfStudyIndex + 1}：${q.question}</p>`;
+            if (q.type === 'choice') {
+                html += `<div class="mt-2">${q.options.join('<br>')}</div>`;
+            }
+            html += `<div class="mt-4"><input type="text" id="selfStudyAnswer" class="p-2 border-2 border-chinese-red rounded-lg w-1/2" placeholder="请输入答案">
+            <button onclick="checkSelfStudyAnswer()" class="ml-4 px-4 py-2 bg-chinese-red text-white rounded-lg">提交</button></div></div>`;
+            document.getElementById('selfStudyContent').innerHTML = html;
+        }
+
+        function checkSelfStudyAnswer() {
+            const userAnswer = document.getElementById('selfStudyAnswer').value.trim();
+            const q = questionBank[currentModule][selfStudyIndex];
+            const isCorrect = userAnswer === q.answer;
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('answerContent').innerHTML = `
+                <p class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}">${isCorrect ? '回答正确！' : `回答错误，正确答案：${q.answer}`}</p>
+                <p class="mt-2">解析：${q.analysis}</p>
+                <button onclick="nextSelfStudyQuestion()" class="mt-4 px-4 py-2 bg-chinese-gold text-chinese-black rounded-lg">下一题</button>
+            `;
+        }
+
+        function nextSelfStudyQuestion() {
+            selfStudyIndex++;
+            document.getElementById('answerSection').classList.add('hidden');
+            renderSelfStudyQuestion();
+        }
+
+        // 课堂PK模块
+        document.getElementById('startPKBtn').addEventListener('click', startPK);
+        document.getElementById('resetPKBtn').addEventListener('click', resetPK);
+        document.getElementById('teamASubmit').addEventListener('click', () => submitPKAnswer('teamA'));
+        document.getElementById('teamBSubmit').addEventListener('click', () => submitPKAnswer('teamB'));
+
+        function startPK() {
+            // 随机生成两组不同顺序的题目
+            const allQuestions = [...questionBank.words, ...questionBank.poems, ...questionBank.literature, ...questionBank.classical, ...questionBank.classics];
+            pkQuestions.teamA = shuffleArray([...allQuestions]).slice(0, 10);
+            pkQuestions.teamB = shuffleArray([...allQuestions]).slice(0, 10);
+            // 重置数据
+            pkIndex = { teamA: 0, teamB: 0 };
+            pkScore = { teamA: 0, teamB: 0 };
+            document.getElementById('teamAScore').textContent = '0';
+            document.getElementById('teamBScore').textContent = '0';
+            document.getElementById('teamARemain').textContent = '10';
+            document.getElementById('teamBRemain').textContent = '10';
+            document.getElementById('teamASubmit').disabled = false;
+            document.getElementById('teamBSubmit').disabled = false;
+            document.getElementById('pkResultSection').classList.add('hidden');
+            // 渲染第一题
+            renderPKQuestion('teamA');
+            renderPKQuestion('teamB');
+            startTimer();
+        }
+
+        function resetPK() {
+            clearInterval(timer);
+            document.getElementById('timer').textContent = '30';
+            document.getElementById('teamAQuestion').innerHTML = '';
+            document.getElementById('teamBQuestion').innerHTML = '';
+            document.getElementById('teamAOptions').innerHTML = '';
+            document.getElementById('teamBOptions').innerHTML = '';
+            document.getElementById('teamAAnswer').value = '';
+            document.getElementById('teamBAnswer').value = '';
+            document.getElementById('teamASubmit').disabled = true;
+            document.getElementById('teamBSubmit').disabled = true;
+            document.getElementById('pkResultSection').classList.add('hidden');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderPKQuestion(team) {
+            const q = pkQuestions[team][pkIndex[team]];
+            const questionEl = document.getElementById(`${team}Question`);
+            const optionsEl = document.getElementById(`${team}Options`);
+            questionEl.innerHTML = `<p class="font-bold">题目${pkIndex[team] + 1}：${q.question}</p>`;
+            optionsEl.innerHTML = q.type === 'choice' ? q.options.join('<br>') : '';
+            document.getElementById(`${team}Answer`).value = '';
+        }
+
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = timeLeft;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert('时间到！');
+                    submitPKAnswer('teamA');
+                    submitPKAnswer('teamB');
+                }
+            }, 1000);
+        }
+
+        function submitPKAnswer(team) {
+            const userAnswer = document.getElementById(`${team}Answer`).value.trim();
+            const q = pkQuestions[team][pkIndex[team]];
+            const isCorrect = userAnswer === q.answer;
+            // 计分
+            if (isCorrect) {
+                pkScore[team] += 10;
+                document.getElementById(`${team}Score`).textContent = pkScore[team];
+            }
+            // 更新剩余题目
+            const remain = 9 - pkIndex[team];
+            document.getElementById(`${team}Remain`).textContent = remain;
+            // 下一题
+            pkIndex[team]++;
+            if (pkIndex.teamA >= 10 && pkIndex.teamB >= 10) {
+                clearInterval(timer);
+                showPKResult();
+                return;
+            }
+            renderPKQuestion(team);
+            // 只有两组都提交后才重置计时器
+            if (pkIndex.teamA === pkIndex.teamB) {
+                startTimer();
+            }
+        }
+
+        function showPKResult() {
+            document.getElementById('pkResultSection').classList.remove('hidden');
+            const winner = pkScore.teamA > pkScore.teamB ? '甲组' : pkScore.teamB > pkScore.teamA ? '乙组' : '平局';
+            let html = `<p class="text-xl font-bold text-chinese-red">比赛结束！最终结果：甲组${pkScore.teamA}分，乙组${pkScore.teamB}分，${winner}获胜！</p>`;
+            html += '<div class="mt-4"><p class="font-bold">题目解析汇总：</p>';
+            // 甲组解析
+            html += '<p class="mt-2 text-blue-700">甲组题目解析：</p>';
+            pkQuestions.teamA.forEach((q, i) => {
+                html += `<p class="mt-1">题目${i+1}：${q.question}<br>正确答案：${q.answer}<br>解析：${q.analysis}</p>`;
+            });
+            // 乙组解析
+            html += '<p class="mt-4 text-green-700">乙组题目解析：</p>';
+            pkQuestions.teamB.forEach((q, i) => {
+                html += `<p class="mt-1">题目${i+1}：${q.question}<br>正确答案：${q.answer}<br>解析：${q.analysis}</p>`;
+            });
+            html += '</div>';
+            document.getElementById('pkResultContent').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
